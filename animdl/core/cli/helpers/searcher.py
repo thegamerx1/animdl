@@ -6,9 +6,14 @@ import json
 
 import lxml.html as htmlparser
 
+from animdl.core import logger
+
 from ...codebase.helper import uwu
 from ...config import *
 from .fuzzysearch import search
+
+from time import sleep
+import logging
 
 NINEANIME_URL_SEARCH = NINEANIME + "search"
 
@@ -60,7 +65,7 @@ def search_allanime(session, query):
             yield {'anime_url': ALLANIME + "anime/{[_id]}".format(result), 'name': result.get('name')}
 
 def search_animepahe(session, query):
-    
+
     animepahe_results = session.get(
         ANIMEPAHE_URL_SEARCH_AJAX, params={
             'q': query, 'm': 'search'})
@@ -134,16 +139,23 @@ def search_tenshi(session, query):
     token = htmlparser.fromstring(tenshi_page.text).xpath(
         '//meta[@name="csrf-token"]')[0].get('content')
 
-    ajax_content = session.post(
-        TENSHI_URL_SEARCH_POST,
-        data={
-            'q': query},
-        headers={
-            'x-requested-with': 'XMLHttpRequest',
-            'x-csrf-token': token,
-            'referer': 'https://tenshi.moe/',
-            'cookie': 'tenshimoe_session={}'.format(session_id)})
-    results = ajax_content.json()
+    while True:
+        ajax_content = session.post(
+            TENSHI_URL_SEARCH_POST,
+            data={
+                'q': query},
+            headers={
+                'x-requested-with': 'XMLHttpRequest',
+                'x-csrf-token': token,
+                'referer': 'https://tenshi.moe/',
+                'cookie': 'tenshimoe_session={}'.format(session_id)})
+        if ajax_content.status_code == 403:
+            logger = logging.getLogger('searcher')
+            logger.warn("Tenshi 403 retrying")
+            sleep(1)
+            continue
+        results = ajax_content.json()
+        break
 
     for result in results:
         yield {'name': result.get('title'), 'anime_url': result.get('url')}

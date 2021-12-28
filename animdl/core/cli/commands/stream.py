@@ -7,6 +7,7 @@ from ...codebase import providers
 from ...config import DEFAULT_PLAYER, QUALITY
 from .. import exit_codes, helpers, http_client
 from ..helpers.intelliq import filter_quality
+from ..helpers import presence as Presence
 
 
 def quality_prompt(log_level, logger, stream_list):
@@ -44,7 +45,7 @@ def quality_prompt(log_level, logger, stream_list):
               help='Use quality strings.',
               required=False,
               default=QUALITY,
-)
+              )
 @click.option('--mpv', is_flag=True, default=DEFAULT_PLAYER == 'mpv',
               flag_value=True, help="Force mpv (defaults to True) for streaming.")
 @click.option('--vlc', is_flag=True, default=DEFAULT_PLAYER ==
@@ -56,13 +57,19 @@ def quality_prompt(log_level, logger, stream_list):
 @click.option('-i', '--index', required=False, default=0,
               show_default=False, type=int, help="Index for the auto flag.")
 @click.option('--log-file',
-            help='Set a log file to log everything to.',
-            required=False,)
+              help='Set a log file to log everything to.',
+              required=False,)
 @click.option('-ll',
               '--log-level',
               help='Set the integer log level.',
               type=int,
               default=20)
+@click.option("--presence",
+              "-p",
+              help="Shows episode and anime on Discord presence.",
+              is_flag=True,
+              default=False,
+              flag_value=True)
 @helpers.bannerify
 def animdl_stream(
     query,
@@ -74,6 +81,7 @@ def animdl_stream(
     auto,
     index,
     log_level,
+    presence,
     **kwargs
 ):
     """
@@ -103,10 +111,14 @@ def animdl_stream(
     logger.debug("Will scrape from {}".format(anime))
     logger.info('Now initiating your stream session')
 
-    enqueuer = providers.get_appropriate(session, anime.get('anime_url'), helpers.get_check(r))
+    enqueuer = providers.get_appropriate(
+        session, anime.get('anime_url'), helpers.get_check(r))
 
     streams = list(enqueuer)
     total = len(streams)
+
+    if presence:
+        Presence.start(anime.get("name"))
 
     for count, (stream_urls_caller, episode_number) in enumerate(streams, 1):
 
@@ -115,7 +127,10 @@ def animdl_stream(
 
             window_title = "Episode {:02d}".format(episode_number)
 
-            stream_urls = filter_quality(list(helpers.ensure_extraction(session, stream_urls_caller)), quality)
+            stream_urls = filter_quality(
+                list(helpers.ensure_extraction(session, stream_urls_caller)), quality)
+
+            Presence.episode(episode_number, total)
 
             if not stream_urls:
                 logger.warning(
@@ -127,7 +142,8 @@ def animdl_stream(
                 stream_urls) > 1 else stream_urls[0]
 
             if selection.pop('is_torrent', False):
-                logging.warning("Obtained torrent in streaming, please download the torrent and stream it. (Torrent downloads take place in sequential order.)")
+                logging.warning(
+                    "Obtained torrent in streaming, please download the torrent and stream it. (Torrent downloads take place in sequential order.)")
                 continue
 
             logger.debug("Calling streamer for {!r}".format(stream_urls))

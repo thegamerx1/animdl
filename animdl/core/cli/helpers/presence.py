@@ -17,4 +17,4 @@ def episode(ep, max):
     if anime == "":
         return
     RPC.update(start=start_time, large_image='icon', large_text='AnimDL {}'.format(
-        __core__), small_image='play', small_text='Playing', state='Episode {} of {}'.format(ep, max), details="Watching {}".format(anime))
+        __core__), small_image='play', small_text='Playing', state='Episode {} of {}'.format(ep, max), details=anime)

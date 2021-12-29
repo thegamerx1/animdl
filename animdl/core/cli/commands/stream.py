@@ -130,7 +130,7 @@ def animdl_stream(
             stream_urls = filter_quality(
                 list(helpers.ensure_extraction(session, stream_urls_caller)), quality)
 
-            Presence.episode(episode_number, total)
+            Presence.episode(episode_number)
 
             if not stream_urls:
                 logger.warning(

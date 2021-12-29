@@ -13,8 +13,8 @@ def start(text):
     RPC.connect()
 
 
-def episode(ep, max):
+def episode(ep):
     if anime == "":
         return
     RPC.update(start=start_time, large_image='icon', large_text='AnimDL {}'.format(
-        __core__), small_image='play', small_text='Playing', state='Episode {} of {}'.format(ep, max), details=anime)
+        __core__), small_image='play', small_text='Playing', state='Episode {}'.format(ep), details=anime)

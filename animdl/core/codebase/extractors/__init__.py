@@ -6,10 +6,11 @@ EXEMPT = [
     '__pycache__'
 ]
 
-try:
+if '__path__' in globals():
     __this_path__ = pathlib.Path(__path__[0])
-except:
+else:
     __this_path__ = pathlib.Path()
+
 
 def iter_extractors(*, exempt=EXEMPT):
     for path in __this_path__.glob('*/'):

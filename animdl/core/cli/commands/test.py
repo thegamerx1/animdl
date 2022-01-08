@@ -19,8 +19,8 @@ from ..http_client import client
               required=False,
               type=int)
 @click.option('--log-file',
-            help='Set a log file to log everything to.',
-            required=False,)
+              help='Set a log file to log everything to.',
+              required=False,)
 @click.option('-ll',
               '--log-level',
               help='Set the integer log level.',
@@ -49,10 +49,11 @@ def animdl_test(x, e, **kwargs):
     for site in x:
         logger.info("Attempting to scrape anime from {!r}.".format(site))
         try:
-            links = [*providers.get_appropriate(session, site, lambda r: r == e)]
+            links = [
+                *providers.get_appropriate(session, site, lambda r: r == e)]
             if not links:
                 raise Exception('No stream urls found on {!r}.'.format(site))
-            for link_cb, en in links:
+            for link_cb, _ in links:
                 for stream in ensure_extraction(session, link_cb):
                     print(
                         '\t - \x1b[32m{stream_url}\x1b[39m'.format_map(stream))

@@ -121,7 +121,7 @@ def search_twist(session, query):
             'x-access-token': '0df14814b9e590a1f26d3071a4ed7974'})
     animes = content.json()
 
-    for match, anime in search(query, animes, processor=lambda r: r.get(
+    for _, anime in search(query, animes, processor=lambda r: r.get(
             'title') or r.get('alt_title')):
         yield {'anime_url': TWIST_URL_CONTENT + anime.get('slug', {}).get('slug'), 'name': anime.get('title', '')}
 
@@ -132,11 +132,12 @@ def search_crunchyroll(session, query):
             CRUNCHYROLL +
             "ajax/?req=RpcApiSearch_GetSearchCandidates").text.strip('*/\n -secur'))
 
-    for match, anime in search(query, content.get(
+    for _, anime in search(query, content.get(
             'data', []), processor=lambda r: r.get('name')):
         # remove region from link (/es-es, /en-us, etc)
         url = re.sub(r'(?<=/)[a-z]{2}-[a-z]{2}/', "", anime.get('link'))
         yield {'anime_url': url.strip("/"), 'name': anime.get('name', '')}
+
 
 
 def search_nyaasi(session, query):

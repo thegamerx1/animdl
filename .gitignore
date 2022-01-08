@@ -20,3 +20,5 @@ http_cache.sqlite
 
 build
 *.egg-info
+
+.vscode

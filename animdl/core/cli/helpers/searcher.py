@@ -36,6 +36,8 @@ HAHO_URL_SEARCH_POST = HAHO + "anime/search"
 TWIST_URL_CONTENT_API = "https://api.twist.moe/api/anime"
 TWIST_URL_CONTENT = TWIST + "a/"
 
+ANIMEFENIX_URL_SEARCH = ANIMEFENIX + "/animes?"
+
 
 def placeholder(session, query):
     yield from []
@@ -110,6 +112,14 @@ def search_gogoanime(session, query):
         yield {'anime_url': GOGOANIME.strip('/') + results.get('href'), 'name': results.get('title')}
 
 
+def search_animefenix(session, query):
+    parsed = htmlparser.fromstring(session.get(
+        ANIMEFENIX_URL_SEARCH, params={'q': query}).text)
+
+    for results in parsed.xpath('//article/figure/a'):
+        yield {'anime_url': results.get('href'), 'name': results.get('title')}
+
+
 def search_kawaiifu(session, query):
     for results in htmlparser.fromstring(session.get(KAWAIIFU + "search-movie", params={'keyword': query}).text).cssselect('.info > h4 > a:last-child'):
         yield {'anime_url': results.get('href'), 'name': results.text_content().strip()}
@@ -137,7 +147,6 @@ def search_crunchyroll(session, query):
         # remove region from link (/es-es, /en-us, etc)
         url = re.sub(r'(?<=/)[a-z]{2}-[a-z]{2}/', "", anime.get('link'))
         yield {'anime_url': url.strip("/"), 'name': anime.get('name', '')}
-
 
 
 def search_nyaasi(session, query):
@@ -214,6 +223,7 @@ link = {
     'crunchyroll': search_crunchyroll,
     'kawaiifu': search_kawaiifu,
     'gogoanime': search_gogoanime,
+    'animefenix': search_animefenix,
     'haho': search_haho,
     'tenshi': search_tenshi,
     'nyaa': search_nyaasi,

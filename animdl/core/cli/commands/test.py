@@ -39,6 +39,7 @@ def animdl_test(x, e, **kwargs):
         'gogoanime': 'https://gogoanime.cm/category/one-piece',
         'tenshi': 'https://tenshi.moe/anime/kjfrhu3s',
         'twist': 'https://twist.moe/a/one-piece',
+        'animefenix': 'https://www.animefenix.com/one-piece',
     }
 
     if not x:

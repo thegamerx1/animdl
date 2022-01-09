@@ -56,6 +56,20 @@ def process_query(
 
     genexp = searcher(session, custom_query)
 
+    # if genexp has no results remove some words from search and retry
+    list = [*genexp]
+    retries = 0
+    while len(list) == 0 and retries < 6:
+        if len(custom_query.split(' ')) < 2:
+            break
+        custom_query = ' '.join(custom_query.split(' ')[:-1])
+        genexp = searcher(session, custom_query)
+        list = [*genexp]
+        retries += 1
+
+    # convert list to generator
+    genexp = iter(list)
+
     if not auto:
         return prompt_user(logger, genexp, searcher.provider)
     return [*genexp][auto_index-1], searcher.provider

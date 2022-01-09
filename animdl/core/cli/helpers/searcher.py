@@ -8,7 +8,7 @@ import lxml.html as htmlparser
 
 from animdl.core import logger
 
-from ...codebase.helper import uwu
+from ...codebase.helper import uwu, cf_clearance
 from ...config import *
 from .fuzzysearch import search
 
@@ -36,7 +36,7 @@ HAHO_URL_SEARCH_POST = HAHO + "anime/search"
 TWIST_URL_CONTENT_API = "https://api.twist.moe/api/anime"
 TWIST_URL_CONTENT = TWIST + "a/"
 
-ANIMEFENIX_URL_SEARCH = ANIMEFENIX + "/animes?"
+ANIMEFENIX_URL_SEARCH = ANIMEFENIX + "animes?"
 
 
 def placeholder(session, query):
@@ -113,9 +113,18 @@ def search_gogoanime(session, query):
 
 
 def search_animefenix(session, query):
-    parsed = htmlparser.fromstring(session.get(
-        ANIMEFENIX_URL_SEARCH, params={'q': query}).text)
+    session.headers.update({'Referer': ANIMEFENIX})
+    failedonce = False
+    while True:
+        req = session.get(ANIMEFENIX_URL_SEARCH, params={'q': query})
 
+        if req.status_code == 403:
+            cf_clearance.query(session, not failedonce)
+            failedonce = True
+            continue
+        break
+
+    parsed = htmlparser.fromstring(req.text)
     for results in parsed.xpath('//article/figure/a'):
         yield {'anime_url': results.get('href'), 'name': results.get('title')}
 
@@ -229,6 +238,8 @@ link = {
     'nyaa': search_nyaasi,
     'twist': search_twist,
     'zoro': search_zoro,
+
+
 }
 
 

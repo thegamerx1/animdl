@@ -14,12 +14,11 @@ def extract_urls(session, episode_page):
     episode_page_content = session.get(episode_page)
     scriptag = htmlparser.tostring(htmlparser.fromstring(
         episode_page_content.text).cssselect(".player-container script")[0])
-    links = (_.group("url").replace(b"&amp;", b"&")
-             for _ in regex.finditer(IFRAME_EXTRACT, scriptag))
 
     embeds = []
-    for link in links:
-        redirect = session.get(link.decode())
+    for re in regex.finditer(IFRAME_EXTRACT, scriptag):
+        link = re.group("url").decode().replace("&amp;", "&")
+        redirect = session.get(link)
         url = regex.findall(IFRAME_EXTRACT, redirect.text.encode())[0].decode()
         # if url is a relative url "../" or "/"
         # replace with animefenix.com
@@ -28,18 +27,21 @@ def extract_urls(session, episode_page):
         elif url.startswith("/"):
             url = url.replace("/", ANIMEFENIX, 1)
 
-        if "mega.nz" in url:
-            continue
+        obj = {"stream_url": url, "headers": {"user-agent": session.headers.get(
+            "user-agent"), "referer": link, "cookie": "cf_clearance={}".format(session.cookies.get("cf_clearance"))}}
+        if "mega.nz" in url or "yourupload.com" in url:
+            embeds.append(obj)
 
-        embeds.append({"stream_url": url, "referer": ANIMEFENIX})
-
+        embeds.insert(0, obj)
     return embeds
 
 
 def fetcher(session, url, check, match):
     url = match.group(0)
 
-    episode_list_page = session.get(url)
+    episode_list_page = session.get(url,         headers={
+        "Referer": "https://animefenix.com/",
+    })
     html = htmlparser.tostring(htmlparser.fromstring(episode_list_page.text).xpath(
         "/html/body/div[2]/section[2]/div[2]/div/div[2]/ul/li[3]")[0])
     count = int(regex.findall(regex.compile(rb'(\d+)</li>'), html)[0])

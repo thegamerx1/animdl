@@ -3,6 +3,7 @@ from click import prompt
 from ...codebase.providers import get_provider
 from ...config import DEFAULT_PROVIDER
 from .searcher import get_searcher
+from time import sleep
 
 
 def prompt_user(logger, anime_list_genexp, provider):
@@ -59,10 +60,12 @@ def process_query(
     # if genexp has no results remove some words from search and retry
     list = [*genexp]
     retries = 0
-    while len(list) == 0 and retries < 6:
-        if len(custom_query.split(' ')) < 2:
+    while len(list) == 0 and retries < 2:
+        sleep(2)
+        lenght = len(custom_query.split(" "))
+        if lenght < 2:
             break
-        custom_query = ' '.join(custom_query.split(' ')[:-1])
+        custom_query = ' '.join(custom_query.split(' ')[:round(lenght/2)])
         genexp = searcher(session, custom_query)
         list = [*genexp]
         retries += 1

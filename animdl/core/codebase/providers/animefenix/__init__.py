@@ -3,11 +3,13 @@ from functools import partial
 import lxml.html as htmlparser
 from ....config import ANIMEFENIX
 from ...helper import construct_site_based_regex
+import json as jsonparser
 
 REGEX = construct_site_based_regex(
     ANIMEFENIX, extra_regex=r'/(?:ver/(?P<episodeslug>.+?)-\d+|(?P<slug>[^&/#?]+))')
 
 IFRAME_EXTRACT = regex.compile(rb"iframe.*src=['\"](?P<url>.+?)['\"]")
+JSONEXTRACT = regex.compile(r"sources\: ?(?P<json>\[.+\])\,")
 
 
 def extract_urls(session, episode_page):
@@ -27,13 +29,26 @@ def extract_urls(session, episode_page):
         elif url.startswith("/"):
             url = url.replace("/", ANIMEFENIX, 1)
 
-        obj = {"stream_url": url, "headers": {"user-agent": session.headers.get(
-            "user-agent"), "referer": link, "cookie": "cf_clearance={}".format(session.cookies.get("cf_clearance"))}}
-        if "mega.nz" in url or "yourupload.com" in url:
-            embeds.append(obj)
+        if "stream/fl.php" in url:
+            reredirect = session.get(url)
+            json = regex.findall(
+                JSONEXTRACT, reredirect.text)[0]
+            result = jsonparser.loads(json)
+            for stream in result:
+                embeds.append(objify(stream["file"], link, session))
+            continue
 
-        embeds.insert(0, obj)
+        if "mega.nz" in url or "yourupload.com" in url:
+            embeds.append(objify(url, link, session))
+            continue
+
+        embeds.insert(0, objify(url, link, session))
     return embeds
+
+
+def objify(url, link, session):
+    return {"stream_url": url, "headers": {"user-agent": session.headers.get(
+            "user-agent"), "referer": link, "cookie": "cf_clearance={}".format(session.cookies.get("cf_clearance"))}}
 
 
 def fetcher(session, url, check, match):

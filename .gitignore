@@ -18,7 +18,12 @@ downloadsdev/
 # Cache
 http_cache.sqlite
 
+<<<<<<< HEAD
 build
 *.egg-info
 
 .vscode
+=======
+# Editor local configs
+.vscode/
+>>>>>>> upstream/master

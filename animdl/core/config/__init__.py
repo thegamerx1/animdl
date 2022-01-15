@@ -20,12 +20,12 @@ def get_existent_path(*paths):
             return path_object
 
 
-USERPROFILE_ANIMDL_PATH = os.getenv('userprofile', ".") + "/.animdl/config.yml"
+USERPROFILE_ANIMDL_PATH = os.getenv("userprofile", ".") + "/.animdl/config.yml"
 
 CONFIGURATION_FILE_PATH = get_existent_path(
-    os.getenv('ANIMDL_CONFIG', './animdl_config.yml'),
-    '/animdl_config.yml',
-    USERPROFILE_ANIMDL_PATH
+    os.getenv("ANIMDL_CONFIG", "./animdl_config.yml"),
+    "/animdl_config.yml",
+    USERPROFILE_ANIMDL_PATH,
 )
 
 DEFAULT_CONFIG = {
@@ -51,50 +51,54 @@ DEFAULT_CONFIG = {
         'twist': 'https://twist.moe/',
         'zoro': 'https://zoro.to/',
     },
-    'quality_string': 'best[subtitle]/best',
-    'default_player': 'mpv',
-    'players': {
-        'mpv': {
-            'executable': 'mpv',
-            'opts': [],
+    "quality_string": "best[subtitle]/best",
+    "default_player": "mpv",
+    "players": {
+        "mpv": {
+            "executable": "mpv",
+            "opts": [],
         },
-        'vlc': {
-            'executable': 'vlc',
-            'opts': [],
+        "vlc": {
+            "executable": "vlc",
+            "opts": [],
         },
-        'iina': {
-            'executable': 'iina-cli',
-            'opts': [],
+        "iina": {
+            "executable": "iina-cli",
+            "opts": [],
         },
-    },
-    'qbittorrent': {
-        'endpoint_url': "http://127.0.0.1:8080",
-        'credentials': {
-            'username': "admin",
-            'password': "youshallnotpass",
+        "celluloid": {
+            "executable": "celluloid",
+            "opts": [],
         },
     },
-    'schedule': {
-        'site_url': 'https://graphql.anilist.co/',
-        'date_format': '%b. %d, %A',
-        'time_format': '%X'
+    "qbittorrent": {
+        "endpoint_url": "http://127.0.0.1:8080",
+        "credentials": {
+            "username": "admin",
+            "password": "youshallnotpass",
+        },
     },
-    'download_auto_retry': 300,
-    'ffmpeg': {
-        'executable': 'ffmpeg',
-        'hls_download': False,
-        'submerge': True,
-    }
+    "schedule": {
+        "site_url": "https://graphql.anilist.co/",
+        "date_format": "%b. %d, %A",
+        "time_format": "%X",
+    },
+    "download_auto_retry": 300,
+    "ffmpeg": {
+        "executable": "ffmpeg",
+        "hls_download": False,
+        "submerge": True,
+    },
 }
 
 CONFIG = DEFAULT_CONFIG
 
 if CONFIGURATION_FILE_PATH is not None:
-    with open(CONFIGURATION_FILE_PATH, 'r') as conf:
+    with open(CONFIGURATION_FILE_PATH, "r") as conf:
         CONFIG = merge_dicts(DEFAULT_CONFIG, yaml.load(
             conf, Loader=yaml.SafeLoader))
 
-SITE_URLS = CONFIG.get('site_urls', {})
+SITE_URLS = CONFIG.get("site_urls", {})
 
 NINEANIME = SITE_URLS.get('9anime')
 ALLANIME = SITE_URLS.get('allanime')
@@ -115,28 +119,28 @@ HENTAISTREAM = SITE_URLS.get('hentaistream')
 TWIST = SITE_URLS.get('twist')
 ZORO = SITE_URLS.get('zoro')
 
-QUALITY = CONFIG.get('quality_string')
+QUALITY = CONFIG.get("quality_string")
 
-DEFAULT_PLAYER = CONFIG.get('default_player')
-PLAYERS = CONFIG.get('players')
+DEFAULT_PLAYER = CONFIG.get("default_player")
+PLAYERS = CONFIG.get("players")
 
-ANICHART = CONFIG.get('schedule', {}).get('site_url')
+ANICHART = CONFIG.get("schedule", {}).get("site_url")
 
-DATE_FORMAT = CONFIG.get('schedule', {}).get('date_format')
-TIME_FORMAT = CONFIG.get('schedule', {}).get('time_format')
+DATE_FORMAT = CONFIG.get("schedule", {}).get("date_format")
+TIME_FORMAT = CONFIG.get("schedule", {}).get("time_format")
 
-SESSION_FILE = CONFIG.get('session_file')
-DEFAULT_PROVIDER = CONFIG.get('default_provider')
+SESSION_FILE = CONFIG.get("session_file")
+DEFAULT_PROVIDER = CONFIG.get("default_provider")
 
-AUTO_RETRY = CONFIG.get('download_auto_retry', 300) / 1000
+AUTO_RETRY = CONFIG.get("download_auto_retry", 300) / 1000
 
-FFMPEG_SETTINGS = CONFIG.get('ffmpeg', {})
+FFMPEG_SETTINGS = CONFIG.get("ffmpeg", {})
 
-FFMPEG_EXECUTABLE = FFMPEG_SETTINGS.get('executable', 'ffmpeg')
-FFMPEG_HLS = FFMPEG_SETTINGS.get('hls_download', False)
-FFMPEG_SUBMERGE = FFMPEG_SETTINGS.get('submerge', True)
+FFMPEG_EXECUTABLE = FFMPEG_SETTINGS.get("executable", "ffmpeg")
+FFMPEG_HLS = FFMPEG_SETTINGS.get("hls_download", False)
+FFMPEG_SUBMERGE = FFMPEG_SETTINGS.get("submerge", True)
 
-QBITTORENT_CONFIG = CONFIG.get('qbittorrent', {})
+QBITTORENT_CONFIG = CONFIG.get("qbittorrent", {})
 
-QBITTORENT_ENDPOINT = QBITTORENT_CONFIG.get('endpoint_url')
-QBITTORENT_CREDENTIALS = QBITTORENT_CONFIG.get('credentials', {})
+QBITTORENT_ENDPOINT = QBITTORENT_CONFIG.get("endpoint_url")
+QBITTORENT_CREDENTIALS = QBITTORENT_CONFIG.get("credentials", {})

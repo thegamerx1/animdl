@@ -111,7 +111,7 @@ def start_streaming_android(executable, stream_url, opts, *, headers=None, **kwa
     if headers:
         args.extend((
             '-e',
-            "--http-header-fields=%s"
+            "http-header-fields=%s"
             % "\r\n".join("{}:{}".format(k, v) for k, v in headers.items())
         ))
         

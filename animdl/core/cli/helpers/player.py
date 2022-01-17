@@ -106,7 +106,7 @@ def start_streaming_vlc(executable, stream_url, opts, *, headers=None, **kwargs)
 
 def start_streaming_android(executable, stream_url, opts, *, headers=None, **kwargs):
     
-    args = [executable, 'start', '--user', '0', 'a', 'android.intent.action.VIEW', '-d', stream_url]
+    args = [executable, 'start', '--user', '0', '-a', 'android.intent.action.VIEW', '-d', stream_url]
 
     if headers:
         args.extend((

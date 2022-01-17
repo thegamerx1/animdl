@@ -77,7 +77,7 @@ def quality_prompt(log_level, logger, stream_list):
     default=DEFAULT_PLAYER,
     show_default=True,
     show_choices=True,
-    type=click.Choice(('mpv', 'vlc', 'iina', 'celluloid', 'ffplay'), case_sensitive=False)
+    type=click.Choice(('mpv', 'vlc', 'iina', 'celluloid', 'ffplay', 'android'), case_sensitive=False)
 )
 @click.option(
     "--auto",

@@ -2,8 +2,6 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from importlib_metadata import functools
-
 from ...config import PLAYERS
 
 
@@ -106,6 +104,28 @@ def start_streaming_vlc(executable, stream_url, opts, *, headers=None, **kwargs)
 
     return subprocess.Popen(args)
 
+def start_streaming_android(executable, stream_url, opts, *, headers=None, **kwargs):
+    
+    args = [executable, 'start', '--user', '0', 'a', 'android.intent.action.VIEW', '-d', stream_url]
+
+    if headers:
+        args.extend((
+            '-e',
+            "--http-header-fields=%s"
+            % "\r\n".join("{}:{}".format(k, v) for k, v in headers.items())
+        ))
+        
+    subtitles = kwargs.pop("subtitles", []) or []
+    
+    if subtitles:
+        for subtitle in subtitles:
+            args.extend(('-e', "sub-file={}".format(subtitle)))
+
+    args.extend(opts or [])
+    args.extend(('-n', 'is.xyz.mpv/.MPVActivity'))
+
+    return subprocess.Popen(args)
+
 
 PLAYER_MAPPING = {
     "mpv": start_streaming_mpv,
@@ -113,6 +133,7 @@ PLAYER_MAPPING = {
     "vlc": start_streaming_vlc,
     "celluloid": start_streaming_celluloid,
     "ffplay": start_streaming_ffplay,
+    "android": start_streaming_android,
 }
 
 

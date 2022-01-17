@@ -2,6 +2,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from importlib_metadata import functools
+
 from ...config import PLAYERS
 
 
@@ -11,6 +13,22 @@ def supported_streamers():
             player_info.get("executable")
         ):
             yield player, player_info
+
+def start_streaming_ffplay(executable, stream_url, opts, *, headers=None, **kwargs):
+    """
+    ffplay does not support subtitles from a url.
+    """
+    args = [executable, stream_url] + (opts or [])
+    
+    if headers:
+        args.extend(("-headers", "\r\n".join("{}:{}".format(k, v) for k, v in headers.items())))
+    
+    content_title = kwargs.pop("content_title", "")
+
+    if content_title:
+        args.extend(["-metadata", "title={}".format(content_title)])
+        
+    return subprocess.Popen(args)
 
 
 def start_streaming_mpv(executable, stream_url, opts, *, headers=None, **kwargs):
@@ -94,6 +112,7 @@ PLAYER_MAPPING = {
     "iina": start_streaming_iina,
     "vlc": start_streaming_vlc,
     "celluloid": start_streaming_celluloid,
+    "ffplay": start_streaming_ffplay,
 }
 
 

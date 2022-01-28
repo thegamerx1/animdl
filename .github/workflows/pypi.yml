@@ -8,17 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checking out repository content
+        uses: actions/checkout@v2
 
-  - name: Checking out repository content
-    uses: actions/checkout@v2
+      - name: Setting up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
 
-  - name: Setting up Python 3.9
-    uses: actions/setup-python@v2
-    with:
-      python-version: '3.9'
-
-  - name: Publish a Python distribution to PyPI
-    uses: pypa/gh-action-pypi-publish@release/v1
-    with:
-      user: __token__
-      password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

@@ -2,8 +2,10 @@ from pypresence import Presence
 from time import time
 from ...__version__ import __core__
 from threading import Thread
+import asyncio
 
 failed = False
+loop = asyncio.new_event_loop()
 try:
     RPC = Presence(925463604923338832)
 except:
@@ -17,6 +19,7 @@ anime = ""
 def start_connection():
     if failed:
         return
+    asyncio.set_event_loop(loop)
     RPC.connect()
 
 

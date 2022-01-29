@@ -29,27 +29,28 @@ CONFIGURATION_FILE_PATH = get_existent_path(
 )
 
 DEFAULT_CONFIG = {
-    'session_file': 'cli_session_animdl.json',
-    'default_provider': 'animepahe',
-    'site_urls': {
-        '9anime': 'https://9anime.to/',
-        'allanime': 'https://allanime.site/',
-        'animekaizoku': 'https://animekaizoku.com/',
-        'animeout': 'https://animeout.xyz/',
-        'animepahe': 'https://animepahe.com/',
-        'animexin': 'https://animexin.xyz/',
-        'animixplay': 'https://animixplay.to/',
-        'animtime': 'https://animtime.com/',
-        'crunchyroll': 'http://www.crunchyroll.com/',
-        'kawaiifu': 'https://kawaiifu.com/',
-        'gogoanime': 'https://gogoanime.cm/',
+    "session_file": "cli_session_animdl.json",
+    "default_provider": "animepahe",
+    "site_urls": {
+        "9anime": "https://9anime.to/",
+        "allanime": "https://allanime.site/",
+        "animekaizoku": "https://animekaizoku.com/",
+        "animeout": "https://animeout.xyz/",
+        "animepahe": "https://animepahe.com/",
+        "animeonsen": "https://animeonsen.xyz/",
+        "animexin": "https://animexin.xyz/",
+        "animixplay": "https://animixplay.to/",
+        "animtime": "https://animtime.com/",
+        "crunchyroll": "http://www.crunchyroll.com/",
+        "kawaiifu": "https://kawaiifu.com/",
+        "gogoanime": "https://gogoanime.cm/",
         'animefenix': 'https://animefenix.com/',
-        'haho': 'https://haho.moe/',
-        'hentaistream': 'https://hentaistream.moe/',
-        'tenshi': 'https://tenshi.moe/',
-        'nyaasi': 'https://nyaa.si/',
-        'twist': 'https://twist.moe/',
-        'zoro': 'https://zoro.to/',
+        "haho": "https://haho.moe/",
+        "hentaistream": "https://hentaistream.moe/",
+        "tenshi": "https://tenshi.moe/",
+        "nyaasi": "https://nyaa.si/",
+        "twist": "https://twist.moe/",
+        "zoro": "https://zoro.to/",
     },
     "quality_string": "best[subtitle]/best",
     "default_player": "mpv",
@@ -113,6 +114,7 @@ ALLANIME = SITE_URLS.get('allanime')
 ANIMEKAIZOKU = SITE_URLS.get('animekaizoku')
 ANIMEOUT = SITE_URLS.get('animeout')
 ANIMEPAHE = SITE_URLS.get('animepahe')
+ANIMEONSEN = SITE_URLS.get("animeonsen")
 ANIMEXIN = SITE_URLS.get('animexin')
 ANIMIXPLAY = SITE_URLS.get('animixplay')
 ANIMTIME = SITE_URLS.get('animtime')

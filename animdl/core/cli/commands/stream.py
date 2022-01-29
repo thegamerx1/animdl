@@ -79,7 +79,9 @@ def quality_prompt(log_level, logger, stream_list):
     default=DEFAULT_PLAYER,
     show_default=True,
     show_choices=True,
-    type=click.Choice(('mpv', 'vlc', 'iina', 'celluloid', 'ffplay', 'android'), case_sensitive=False)
+    type=click.Choice(
+        ("mpv", "vlc", "iina", "celluloid", "ffplay", "android"), case_sensitive=False
+    ),
 )
 @click.option(
     "--auto",
@@ -131,8 +133,7 @@ def animdl_stream(
     session = http_client.client
     logger = logging.getLogger("streamer")
     streamer = helpers.handle_streamer(
-        click.parser.split_arg_string(player_opts or "") or [],
-        **{player: True}
+        click.parser.split_arg_string(player_opts or "") or [], **{player: True}
     )
 
     if streamer is False:

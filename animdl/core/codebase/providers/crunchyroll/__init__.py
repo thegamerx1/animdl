@@ -60,9 +60,10 @@ def group_content(slug, html_element):
 
     episodes = defaultdict(list)
 
-    for element in html_element.cssselect("a.episode")[::-1]:
+    for element in html_element.cssselect("a.js-simulcast-episode-link")[::-1]:
         episode_match = regex.search(
-            "^/{}/episode-(\d+)".format(regex.escape(slug)), element.get("href")
+            "^/{}/.*/episode-(\d+)".format(regex.escape(slug)),
+            element.get("href")
         )
         episodes[int(episode_match.group(1)) if episode_match else 0].append(
             (CRUNCHYROLL + element.get("href", "").strip("/"), element.get("title"))
@@ -77,16 +78,19 @@ def fetcher(session, url, check, match):
     url = CRUNCHYROLL + slug
 
     episode_urls = sorted(
-        group_content(slug, htmlparser.fromstring(session.get(url).text)).items()
+        group_content(slug, htmlparser.fromstring(
+            session.get(url).text)).items()
     )
 
     if not episode_urls:
         us_catalouge_session = session.get(
             "https://raw.githubusercontent.com/justfoolingaround/animdl-provider-benchmarks/master/api/raw"
         ).text
+
         session.cookies.update({"session_id": us_catalouge_session})
         episode_urls = sorted(
-            group_content(slug, htmlparser.fromstring(session.get(url).text)).items()
+            group_content(slug, htmlparser.fromstring(
+                session.get(url).text)).items()
         )
 
     for episode_number, episode_data in episode_urls:

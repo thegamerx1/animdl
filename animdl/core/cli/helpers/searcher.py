@@ -192,10 +192,16 @@ def search_zoro(session, query):
             "anime_url": ZORO + result.get("href")[1:-11],
         }
 
+def search_h_ntai_stream(session, query):
+    for result in htmlparser.fromstring(session.get(HENTAISTREAM, params={'s': query}).text).cssselect('article > .bsx > a'):
+        yield {
+            "name": result.get("title"),
+            "anime_url": result.get("href"),
+        }
 
 def search_haho(session, query):
     yield from search_tenshi(session, query, domain=HAHO)
-    
+
 
 link = {
     "9anime": search_9anime,
@@ -208,6 +214,7 @@ link = {
     "kawaiifu": search_kawaiifu,
     "gogoanime": search_gogoanime,
     "haho": search_haho,
+    "hentaistream": search_h_ntai_stream,
     "tenshi": search_tenshi,
     "nyaa": search_nyaasi,
     "twist": search_twist,

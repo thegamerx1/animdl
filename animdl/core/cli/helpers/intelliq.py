@@ -4,8 +4,7 @@ IntelliQ, a highly intelligent and robust quality string parser.
 
 
 import logging
-from typing import (Callable, Generator, Iterable, List, Optional, Tuple,
-                    TypeVar, Union)
+from typing import Callable, Generator, Iterable, List, Optional, Tuple, TypeVar, Union
 
 import regex
 
@@ -20,8 +19,10 @@ def NO_PROCESS(stream: stream_type):
     return stream
 
 
-def get_pair(target: 'pair_value', pairs: Tuple[pair_value, pair_value]) -> Tuple[Union[Tuple[pair_value, pair_value], Tuple[None, None], bool]]:
-    
+def get_pair(
+    target: "pair_value", pairs: Tuple[pair_value, pair_value]
+) -> Tuple[Union[Tuple[pair_value, pair_value], Tuple[None, None], bool]]:
+
     for f, l in pairs:
         if target in (f, l):
             return (f, l), target == f
@@ -29,7 +30,9 @@ def get_pair(target: 'pair_value', pairs: Tuple[pair_value, pair_value]) -> Tupl
     return (None, None), False
 
 
-def parse_parenthesized_portions(segment: 'str') -> Tuple[str, Optional[Union[str, regex.Pattern]]]:
+def parse_parenthesized_portions(
+    segment: "str",
+) -> Tuple[str, Optional[Union[str, regex.Pattern]]]:
     match = PORTION_PARSER.search(segment)
 
     if match is None:
@@ -41,7 +44,9 @@ def parse_parenthesized_portions(segment: 'str') -> Tuple[str, Optional[Union[st
     return (match.group(1), match.group(4))
 
 
-def portion_check(portions: Iterable[Tuple[str, Optional[Union[str, regex.Pattern]]]]) -> Callable[[stream_type], bool]:
+def portion_check(
+    portions: Iterable[Tuple[str, Optional[Union[str, regex.Pattern]]]]
+) -> Callable[[stream_type], bool]:
 
     for key, portion in portions:
         if portion is None:
@@ -58,10 +63,10 @@ def portion_check(portions: Iterable[Tuple[str, Optional[Union[str, regex.Patter
 
 
 def parenthesized_portions(
-    string: 'str',
-    escape: 'str'="\\",
-    quoters: List[str]=["'", '"'],
-    parenthesis: List[Tuple[str, str]]=[("[", "]"), ("(", ")"), ("{", "}")],
+    string: "str",
+    escape: "str" = "\\",
+    quoters: List[str] = ["'", '"'],
+    parenthesis: List[Tuple[str, str]] = [("[", "]"), ("(", ")"), ("{", "}")],
 ) -> Generator[Tuple[str, Optional[Union[str, regex.Pattern]]], None, None]:
 
     initiator, endpoint = min(
@@ -101,10 +106,10 @@ def parenthesized_portions(
 
 def split_portion(
     string: str,
-    splitters: List[str]=["/"],
-    escape: 'str'="\\",
-    quoters: List[str]=["'", '"'],
-    parenthesis: List[Tuple[str, str]]=[("[", "]"), ("(", ")"), ("{", "}")],
+    splitters: List[str] = ["/"],
+    escape: "str" = "\\",
+    quoters: List[str] = ["'", '"'],
+    parenthesis: List[Tuple[str, str]] = [("[", "]"), ("(", ")"), ("{", "}")],
 ) -> Generator[str, None, None]:
 
     multiquote_context = dict.fromkeys(quoters, False)
@@ -190,7 +195,8 @@ def parse_quality_only(quality: str) -> Callable[[stream_type], bool]:
 
 
 def finalise_check(
-    quality_check: Callable[[stream_type], bool], parsed_parenthesized_portions: 'Tuple[str, Optional[Union[str, regex.Pattern]]]'
+    quality_check: Callable[[stream_type], bool],
+    parsed_parenthesized_portions: "Tuple[str, Optional[Union[str, regex.Pattern]]]",
 ) -> Callable[[stream_type], List[stream_type]]:
     def internal(streams):
         streams = list(
@@ -207,7 +213,11 @@ def finalise_check(
     return internal
 
 
-def parse_quality_string(quality_string: str) -> Generator[tuple[str, Callable[[stream_type], Optional[List[stream_type]]]], None, None]:
+def parse_quality_string(
+    quality_string: str,
+) -> Generator[
+    tuple[str, Callable[[stream_type], Optional[List[stream_type]]]], None, None
+]:
 
     quality_string = quality_string.lower()
 
@@ -219,7 +229,9 @@ def parse_quality_string(quality_string: str) -> Generator[tuple[str, Callable[[
         )
 
 
-def filter_quality(streams: Iterable[stream_type], quality_string: str) -> List[stream_type]:
+def filter_quality(
+    streams: Iterable[stream_type], quality_string: str
+) -> List[stream_type]:
 
     logger = logging.getLogger("utils/intelliq")
 

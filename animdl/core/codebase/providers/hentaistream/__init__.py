@@ -12,11 +12,12 @@ EPISODE_REGEX = regex.compile(r"/\d+/[^&?/]+")
 REGEX = construct_site_based_regex(HENTAISTREAM, extra_regex=r"/(anime|\d+)/([^?&/]+)")
 
 QUALITY_MAP = {
-    720: 'x264.720p.mp4',
+    720: "x264.720p.mp4",
     1080: "av1.1080p.webm",
     2160: "av1.2160p.webm",
     4320: "av1.4320p.webm",
 }
+
 
 def get_episodes_page(session, url):
     uwu.bypass_ddos_guard(session, HENTAISTREAM)
@@ -41,14 +42,15 @@ def extract_from_site(session, episode_url, **opts):
 
         for quality, suffix in QUALITY_MAP.items():
             stream = base + suffix
-            if session.head(stream, headers={'referer': HENTAISTREAM}).status_code == 200:
+            if (
+                session.head(stream, headers={"referer": HENTAISTREAM}).status_code
+                == 200
+            ):
                 yield {
-                    'quality': quality,
-                    'stream_url': stream,
-                    'headers': {
-                        'referer': HENTAISTREAM
-                    },
-                    **stream_meta
+                    "quality": quality,
+                    "stream_url": stream,
+                    "headers": {"referer": HENTAISTREAM},
+                    **stream_meta,
                 }
 
 

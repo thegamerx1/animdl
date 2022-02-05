@@ -140,9 +140,9 @@ def search_twist(session, query):
     )
     animes = content.json()
 
-    for _, anime in search(
+    for anime in search(
         query, animes, processor=lambda r: r.get("title") or r.get("alt_title")
-    ):
+    ):  
         yield {
             "anime_url": TWIST_URL_CONTENT + anime.get("slug", {}).get("slug"),
             "name": anime.get("title", ""),
@@ -156,7 +156,7 @@ def search_crunchyroll(session, query):
         ).text.strip("*/\n -secur")
     )
 
-    for _, anime in search(
+    for anime in search(
         query, content.get("data", []), processor=lambda r: r.get("name")
     ):
         yield {

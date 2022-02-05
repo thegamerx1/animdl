@@ -34,7 +34,7 @@ def extract_from_site(session, episode_url, **opts):
         "iframe"
     ):
         _, content_uri = embed.get("src", "#").split("#")
-        base, *_sub = base64.b64decode(content_uri).decode()[4:].split(";")
+        base, *_sub = regex.split(r'[;,]', base64.b64decode(content_uri).decode()[4:])
 
         subtitle = list(base + _ + ".vtt" for _ in _sub)
 

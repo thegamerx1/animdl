@@ -184,13 +184,13 @@ def parse_quality_only(quality: str) -> Callable[[stream_type], bool]:
             min(streams, key=lambda stream: get_int(stream.get("quality", 0)))
         ]
 
-    if quality and quality.isdigit():
+    if quality and not quality.isdigit():
         return NO_PROCESS
 
     return lambda streams: list(
         stream
         for stream in streams
-        if get_int(stream.get("quality", 0)) >= int(quality or 0)
+        if get_int(stream.get("quality", 0)) <= float(quality or 'inf')
     )
 
 

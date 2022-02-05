@@ -121,7 +121,7 @@ def standard_download(
                 temporary_headers.update({"Ranges": "bytes={}-".format(downloaded)})
             try:
                 with session.stream(
-                    "GET", url, allow_redirects=True, headers=headers
+                    "GET", url, headers=headers
                 ) as http_stream:
                     http_stream.raise_for_status()
 

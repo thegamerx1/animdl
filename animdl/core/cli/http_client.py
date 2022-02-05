@@ -13,6 +13,7 @@ headers = httpx.Headers(
     }
 )
 
+
 class AnimeHttpClient(httpx.Client):
 
     http_logger = logging.getLogger("animdl-http")

@@ -33,8 +33,7 @@ def extract_urls(session, episode_page, *, post_processor):
         htmlparser.fromstring(episode_page_content.text).cssselect("iframe") or [{}]
     )[0].get("src")
     yield from post_processor(
-        session,
-        session.get(embed_page, headers={"referer": episode_page}).text
+        session, session.get(embed_page, headers={"referer": episode_page}).text
     )
 
 

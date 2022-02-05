@@ -190,7 +190,7 @@ def parse_quality_only(quality: str) -> Callable[[stream_type], bool]:
     return lambda streams: list(
         stream
         for stream in streams
-        if get_int(stream.get("quality", 0)) <= float(quality or 'inf')
+        if get_int(stream.get("quality", 0)) <= float(quality or "inf")
     )
 
 

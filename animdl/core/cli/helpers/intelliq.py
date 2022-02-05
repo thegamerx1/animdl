@@ -216,7 +216,7 @@ def finalise_check(
 def parse_quality_string(
     quality_string: str,
 ) -> Generator[
-    tuple[str, Callable[[stream_type], Optional[List[stream_type]]]], None, None
+    Tuple[str, Callable[[stream_type], Optional[List[stream_type]]]], None, None
 ]:
 
     quality_string = quality_string.lower()

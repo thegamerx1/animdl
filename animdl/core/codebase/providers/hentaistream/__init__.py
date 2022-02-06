@@ -20,7 +20,6 @@ QUALITY_MAP = {
 
 
 def get_episodes_page(session, url):
-    uwu.bypass_ddos_guard(session, HENTAISTREAM)
     return (
         htmlparser.fromstring(session.get(url).text)
         .cssselect('li[itemscope] > a[href^="https://hentaistream.moe/anime/"]')[0]
@@ -55,6 +54,7 @@ def extract_from_site(session, episode_url, **opts):
 
 
 def fetcher(session, url, check, match):
+    uwu.bypass_ddos_guard(session, HENTAISTREAM)
 
     if match.group(1).isdigit():
         url = get_episodes_page(session, url)

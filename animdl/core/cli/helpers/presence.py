@@ -1,41 +1,79 @@
 from pypresence import Presence
-from time import time
+from time import time, sleep
 from ...__version__ import __core__
 from threading import Thread
 import asyncio
+from requests import post
 
-failed = False
 loop = asyncio.new_event_loop()
-try:
-    RPC = Presence(925463604923338832)
-except:
-    failed = True
-    print("Discord presence failed")
-
+RPC = ""
+connected = False
+failed = True
 start_time = time()
 anime = ""
+ep = 0
+
+query = """{{
+    Media(search: "{}") {{
+        title {{
+            romaji
+            english
+        }}
+    }}
+}}"""
 
 
 def start_connection():
-    if failed:
-        return
+    global failed, connected, RPC, ep
     asyncio.set_event_loop(loop)
-    RPC.connect()
+    # if rpc not connected retry infinitely
+    while True:
+        if failed:
+            try:
+                RPC = Presence(925463604923338832)
+                failed = False
+            except:
+                failed = True
+                print("Discord presence failed")
+        else:
+            if not connected:
+                try:
+                    RPC.connect()
+                    connected = True
+                except Exception as e:
+                    connected = False
+                    failed = True
+                    print(e)
+
+        if connected:
+            update()
+
+        sleep(15)
 
 
 def start(text):
-    global anime
-    anime = text
+    global anime, query
+    response = post("https://graphql.anilist.co", json={
+        "query": query.format(text)
+    })
+    anime = response.json()['data']['Media']['title']['english']
+    if anime == None:
+        anime = text
     thread = Thread(target=start_connection)
     thread.start()
 
 
-def episode(ep):
-    global failed
-    if failed:
-        return
+def update():
+    global connected, RPC, ep
+    if connected:
+        try:
+            RPC.update(start=start_time, large_image='icon', large_text='AnimDL {}'.format(
+                __core__), small_image='play', small_text='Playing', state='Episode {}'.format(ep), details=anime)
+        except Exception as e:
+            connected = False
 
-    if anime == "":
-        return
-    RPC.update(start=start_time, large_image='icon', large_text='AnimDL {}'.format(
-        __core__), small_image='play', small_text='Playing', state='Episode {}'.format(ep), details=anime)
+
+def episode(eps):
+    global ep
+    ep = eps
+    update()

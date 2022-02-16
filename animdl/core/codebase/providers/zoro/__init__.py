@@ -48,7 +48,7 @@ def extract_episode(session, data_id, title):
             "stream_url": source_data.get("link"),
             "further_extraction": (
                 cdn,
-                {},
+                {"headers": {"Referer": ZORO}},
             ),
             "title": "{} - {}".format(server.get("data-type", "").upper(), title),
         }

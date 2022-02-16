@@ -23,7 +23,6 @@ def inherit_stream_meta(parent, streams, *, exempt=["headers", "stream_url"]):
 
 def further_extraction(session, stream):
     extractor, options = stream.pop("further_extraction", (None, None))
-
     if extractor:
         for ext_module, ext in extractors.iter_extractors():
             if ext == extractor:
@@ -34,8 +33,9 @@ def further_extraction(session, stream):
                             further_extraction(session, inherited_stream)
                             for inherited_stream in inherit_stream_meta(
                                 stream,
-                                ext_module.extract(session, stream.get("stream_url")),
-                                **options
+                                ext_module.extract(
+                                    session, stream.get("stream_url"), **options
+                                ),
                             )
                         ),
                         [],

@@ -170,7 +170,7 @@ def animdl_stream(
         playing = True
         while playing:
 
-            window_title = "Episode {:02d}".format(episode_number)
+            window_title = "Episode {:02d}".format(int(episode_number))
 
             stream_urls = filter_quality(
                 list(helpers.ensure_extraction(

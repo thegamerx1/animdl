@@ -4,6 +4,7 @@ import lxml.html as htmlparser
 from ....config import ANIMEFENIX
 from ...helper import construct_site_based_regex
 import json as jsonparser
+import time
 
 REGEX = construct_site_based_regex(
     ANIMEFENIX, extra_regex=r'/(?:ver/(?P<episodeslug>.+?)-\d+|(?P<slug>[^&/#?]+))')
@@ -20,7 +21,8 @@ def extract_urls(session, episode_page):
     embeds = []
     for re in regex.finditer(IFRAME_EXTRACT, scriptag):
         link = re.group("url").decode().replace("&amp;", "&")
-        redirect = session.get(link)
+        redirect = makequeryanfuckingretrywtfthertuckingfuckholyshitiahatepythoniregretmylifechoices(
+            link, session)
         url = regex.findall(IFRAME_EXTRACT, redirect.text.encode())[0].decode()
         # if url is a relative url "../" or "/"
         # replace with animefenix.com
@@ -30,7 +32,8 @@ def extract_urls(session, episode_page):
             url = url.replace("/", ANIMEFENIX, 1)
 
         if "stream/fl.php" in url:
-            reredirect = session.get(url)
+            reredirect = makequeryanfuckingretrywtfthertuckingfuckholyshitiahatepythoniregretmylifechoices(
+                url, session)
             json = regex.findall(
                 JSONEXTRACT, reredirect.text)[0]
             result = jsonparser.loads(json)
@@ -49,6 +52,19 @@ def extract_urls(session, episode_page):
 def objify(url, link, session):
     return {"stream_url": url, "headers": {"user-agent": session.headers.get(
             "user-agent"), "referer": link, "cookie": "cf_clearance={}".format(session.cookies.get("cf_clearance"))}}
+
+
+def makequeryanfuckingretrywtfthertuckingfuckholyshitiahatepythoniregretmylifechoices(url, session):
+    query = session.get(url)
+    tries = 0
+    while query.status_code != 200:
+        if tries > 3:
+            return None
+        time.sleep(1)
+        query = session.get(url)
+        tries += 1
+
+    return query
 
 
 def fetcher(session, url, check, match):

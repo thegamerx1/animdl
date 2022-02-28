@@ -6,17 +6,11 @@ import json
 
 import lxml.html as htmlparser
 
-from animdl.core import logger
-
-from ...codebase.helper import uwu, cf_clearance
+from ...codebase.helper import uwu
 from ...config import *
 from .fuzzysearch import search
 
-from time import sleep
-import logging
-import re
-
-NINEANIME_URL_SEARCH = NINEANIME + "search"
+NINEANIME_URL_SEARCH = NINEANIME + "filter"
 
 ANIMEPAHE_URL_CONTENT = ANIMEPAHE + "anime/%s"
 ANIMEPAHE_URL_SEARCH_AJAX = ANIMEPAHE + "api"

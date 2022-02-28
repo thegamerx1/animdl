@@ -18,7 +18,8 @@ def prompt_user(logger, anime_list_genexp, provider):
 
     for n, anime in enumerate(expansion, 1):
         logger.info(
-            "{0:02d}: {1[name]} \x1b[33m{1[anime_url]}\x1b[39m".format(n, anime)
+            "{0:02d}: {1[name]} \x1b[33m{1[anime_url]}\x1b[39m".format(
+                n, anime)
         )
 
     if len(expansion) == 1:

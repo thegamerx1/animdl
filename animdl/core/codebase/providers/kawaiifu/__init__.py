@@ -1,8 +1,9 @@
-import regex
 from collections import defaultdict
 from functools import partial
 
 import lxml.html as htmlparser
+import regex
+import yarl
 
 REGEX = regex.compile(
     r"(?:https?://)?(?:\S+\.)?(?P<host>domdom\.stream|bestanime3\.xyz|kawaiifu\.com)/(?P<episode_page>anime/)?(?P<type>season/[^/]+|.+)/(?P<slug>[^?&#]+)"
@@ -32,19 +33,20 @@ def get_from_url(session, url):
 
     for servers in html_element.cssselect(".list-server"):
         for element in servers.cssselect(".list-ep a"):
-            episodes[get_int(element.text_content()) or 0].append(element.get("href"))
+            episodes[get_int(element.text_content())
+                     or 0].append(element.get("href"))
     return episodes
 
 
 def fetcher(session, url, check, match):
 
-    if match.group("host") == "kawaiifu.com":
-        url += "-episode"
+    url = yarl.URL(url).with_host("bestanime3.xyz").human_repr()
 
     for episode, episode_urls in sorted(
         get_from_url(session, url).items(), key=lambda x: x[0]
     ):
         if check(episode):
             yield partial(
-                lambda s, x: [*extract_stream_urls(s, x)], session, episode_urls
+                lambda s, x: [
+                    *extract_stream_urls(s, x)], session, episode_urls
             ), episode

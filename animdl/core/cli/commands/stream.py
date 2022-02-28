@@ -214,6 +214,8 @@ def animdl_stream(
             player_process = streamer(
                 selection.get("stream_url"),
                 headers=headers,
+                anime=anime,
+                episode_number=episode_number,
                 content_title=selection.get("title") or window_title,
                 subtitles=selection.get("subtitle", []),
             )

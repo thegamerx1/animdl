@@ -21,7 +21,8 @@ def start_streaming_ffplay(executable, stream_url, opts, *, headers=None, **kwar
 
     if headers:
         args.extend(
-            ("-headers", "\r\n".join("{}:{}".format(k, v) for k, v in headers.items()))
+            ("-headers", "\r\n".join("{}:{}".format(k, v)
+             for k, v in headers.items()))
         )
 
     content_title = kwargs.pop("content_title", "")
@@ -42,11 +43,20 @@ def start_streaming_mpv(executable, stream_url, opts, *, headers=None, **kwargs)
         )
 
     content_title = kwargs.pop("content_title", "")
+    anime = kwargs.pop("anime", "")
+    episode_number = kwargs.pop("episode_number", "")
     subtitles = kwargs.pop("subtitles", []) or []
 
-    if content_title:
-        args.append("--title=%s" % content_title)
+    title = ""
+    if anime:
+        title += anime.get("name")
+    else:
+        title = "No title"
 
+    if episode_number:
+        title += " - {}".format(episode_number)
+
+    args.append("--title=%s" % title)
     args.extend("--sub-file={}".format(sub) for sub in subtitles)
 
     return subprocess.Popen(args)
@@ -80,7 +90,8 @@ def start_streaming_vlc(executable, stream_url, opts, *, headers=None, **kwargs)
             args.append("--http-referrer={}".format(headers.get("referer")))
 
         if headers.get("user-agent"):
-            args.append("--http-user-agent={}".format(headers.get("user-agent")))
+            args.append(
+                "--http-user-agent={}".format(headers.get("user-agent")))
 
     subtitles = kwargs.pop("subtitles", []) or []
     args.extend("--sub-file={}".format(sub) for sub in subtitles)
@@ -155,5 +166,5 @@ def handle_streamer(player_opts, **kwargs):
 
 def start_streaming(player, executable, stream_url, *, headers=None, **kwargs):
     return PLAYER_MAPPING.get(player, lambda *args, **kwargs: False)(
-        executable, stream_url, headers=headers, **kwargs
+        executable,  stream_url, headers=headers, **kwargs
     )

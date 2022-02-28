@@ -35,6 +35,7 @@ setup(
         "tqdm",
         "regex==2021.10.8",
         "pycryptodomex",
+        "pypresence"
     ],
     entry_points="""
         [console_scripts]

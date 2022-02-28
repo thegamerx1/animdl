@@ -190,17 +190,6 @@ def search_crunchyroll(session, query):
         }
 
 
-def search_nyaasi(session, query):
-    for anime in htmlparser.fromstring(
-        session.get(NYAASI, params={"q": query,
-                    "s": "seeders", "o": "desc"}).text
-    ).cssselect('tr > td[colspan="2"] > a[title]:last-child	'):
-        yield {
-            "anime_url": NYAASI + anime.get("href")[1:],
-            "name": anime.get("title", "").strip(),
-        }
-
-
 def search_tenshi(session, query, *, domain=TENSHI):
     uwu.bypass_ddos_guard(session, domain)
     tenshi_page = htmlparser.fromstring(
@@ -249,7 +238,6 @@ link = {
     "haho": search_haho,
     "hentaistream": search_h_ntai_stream,
     "tenshi": search_tenshi,
-    "nyaa": search_nyaasi,
     "twist": search_twist,
     "zoro": search_zoro,
 }

@@ -48,7 +48,6 @@ DEFAULT_CONFIG = {
         "haho": "https://haho.moe/",
         "hentaistream": "https://hentaistream.moe/",
         "tenshi": "https://tenshi.moe/",
-        "nyaasi": "https://nyaa.si/",
         "twist": "https://twist.moe/",
         "zoro": "https://zoro.to/",
     },
@@ -122,7 +121,6 @@ CRUNCHYROLL = SITE_URLS.get('crunchyroll')
 KAWAIIFU = SITE_URLS.get('kawaiifu')
 GOGOANIME = SITE_URLS.get('gogoanime')
 ANIMEFENIX = SITE_URLS.get('animefenix')
-NYAASI = SITE_URLS.get('nyaasi')
 TENSHI = SITE_URLS.get('tenshi')
 HAHO = SITE_URLS.get('haho')
 HENTAISTREAM = SITE_URLS.get('hentaistream')

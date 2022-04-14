@@ -8,12 +8,14 @@ from ....config import TENSHI
 from ...helper import construct_site_based_regex, uwu
 
 REGEX = construct_site_based_regex(TENSHI, extra_regex=r"/anime/([^?&/]+)")
+TITLES_REGEX = regex.compile(r'<h1 class="mb-3">(.+?)</h1>')
 
 
 def post_processor(session, stream_page):
-    cookies = "__ddg1={}; __ddg2={}".format(
-        session.cookies.get("__ddg1", domain=".tenshi.moe"),
-        session.cookies.get("__ddg2", domain=".tenshi.moe"),
+    cookies = "__ddg1={}; __ddg2={}; __ddg2_={}".format(
+        session.cookies.get("__ddg1_", ''),
+        session.cookies.get("__ddg2", ''),
+        session.cookies.get("__ddg2_", ''),
     )
     yield from (
         {
@@ -56,3 +58,11 @@ def fetcher(
                 lambda c: [*extract_urls(session, c, post_processor=post_processor)],
                 "{}/{:d}".format(url, episode),
             ), episode
+
+
+def metadata_fetcher(session, url, match, *, domain=TENSHI):
+
+    uwu.bypass_ddos_guard(session, domain)
+    url = match.group(0)
+
+    return {"titles": TITLES_REGEX.findall(session.get(url).text)}

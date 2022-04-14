@@ -6,12 +6,12 @@ import regex
 from click import prompt
 
 from ...codebase import downloader, extractors
-from .fun import (bannerify, choice, create_random_titles, stream_judiciary,
-                  to_stdout)
+from .fun import bannerify, choice, create_random_titles, stream_judiciary, to_stdout
 from .intelliq import filter_quality
 from .player import *
 from .processors import get_searcher, process_query
 from .searcher import link as processor_link
+from .special import special_parser
 
 fe_logger = logging.getLogger("further-extraction")
 
@@ -105,7 +105,8 @@ Complete traceback: {3}\
 def download(
     session, logger, content_dir, outfile_name, stream_urls, quality, **kwargs
 ):
-    downloadable_content = filter_quality(stream_urls, quality)
+
+    downloadable_content = filter_quality(list(stream_urls), quality)
 
     if not downloadable_content:
         return False, "No downloadable content found."

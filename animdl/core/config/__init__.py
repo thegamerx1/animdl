@@ -21,10 +21,11 @@ def get_existent_path(*paths):
         if path_object.exists():
             return path_object
 
+
 if sys.platform == "win32":
     USERPROFILE_ANIMDL_PATH = os.getenv("userprofile", ".") + "/.animdl/config.yml"
 else:
-    USERPROFILE_ANIMDL_PATH = os.getenv("HOME", ".") + "/animdl/config.yml"
+    USERPROFILE_ANIMDL_PATH = os.getenv("HOME", ".") + "/.config/animdl/config.yml"
 
 CONFIGURATION_FILE_PATH = get_existent_path(
     os.getenv("ANIMDL_CONFIG", "./animdl_config.yml"),
@@ -33,8 +34,7 @@ CONFIGURATION_FILE_PATH = get_existent_path(
 )
 
 DEFAULT_CONFIG = {
-    "session_file": "cli_session_animdl.json",
-    "default_provider": "zoro",
+    "default_provider": "animixplay",
     "site_urls": {
         "9anime": "https://9anime.to/",
         "allanime": "https://allanime.site/",
@@ -67,7 +67,7 @@ DEFAULT_CONFIG = {
             "opts": [],
         },
         "iina": {
-            "executable": "iina-cli",
+            "executable": "iina",
             "opts": [],
         },
         "celluloid": {
@@ -83,13 +83,6 @@ DEFAULT_CONFIG = {
             "opts": [],
         },
     },
-    "qbittorrent": {
-        "endpoint_url": "http://127.0.0.1:8080",
-        "credentials": {
-            "username": "admin",
-            "password": "youshallnotpass",
-        },
-    },
     "schedule": {
         "site_url": "https://graphql.anilist.co/",
         "date_format": "%b. %d, %A",
@@ -102,6 +95,11 @@ DEFAULT_CONFIG = {
         "submerge": True,
     },
     "discord_presence": False,
+    "fzf": {
+        "executable": "fzf",
+        "opts": [],
+        "state": False,
+    },
 }
 
 CONFIG = DEFAULT_CONFIG
@@ -142,7 +140,6 @@ ANICHART = CONFIG.get("schedule", {}).get("site_url")
 DATE_FORMAT = CONFIG.get("schedule", {}).get("date_format")
 TIME_FORMAT = CONFIG.get("schedule", {}).get("time_format")
 
-SESSION_FILE = CONFIG.get("session_file")
 DEFAULT_PROVIDER = CONFIG.get("default_provider")
 
 AUTO_RETRY = CONFIG.get("download_auto_retry", 300) / 1000
@@ -153,9 +150,9 @@ FFMPEG_EXECUTABLE = FFMPEG_SETTINGS.get("executable", "ffmpeg")
 FFMPEG_HLS = FFMPEG_SETTINGS.get("hls_download", False)
 FFMPEG_SUBMERGE = FFMPEG_SETTINGS.get("submerge", True)
 
-QBITTORENT_CONFIG = CONFIG.get("qbittorrent", {})
-
-QBITTORENT_ENDPOINT = QBITTORENT_CONFIG.get("endpoint_url")
-QBITTORENT_CREDENTIALS = QBITTORENT_CONFIG.get("credentials", {})
-
 DISCORD_PRESENCE = CONFIG.get("discord_presence", False)
+
+FZF = CONFIG.get("fzf", {})
+FZF_EXECUTABLE = FZF.get("executable", "fzf")
+FZF_OPTS = FZF.get("opts", [])
+FZF_STATE = FZF.get("state", False)

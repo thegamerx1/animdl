@@ -66,10 +66,11 @@ def set_streaming_episode(session, anime_name, episode):
             state=state,
             large_image=image,
             small_image="mascot",
+            large_text="https://github.com/justfoolingaround/animdl",
             start=int(time.time()),
         )
 
-    around = episode - (episode % 11)
+    around = episode - (episode % 10)
 
     current = get_episodes(session, anime["id"], around)[episode % 11 - 1]
 

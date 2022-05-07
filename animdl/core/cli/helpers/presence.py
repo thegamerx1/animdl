@@ -3,7 +3,7 @@ from time import time, sleep
 from ...__version__ import __core__
 from threading import Thread
 import asyncio
-from requests import post
+from ..http_client import client
 
 loop = asyncio.new_event_loop()
 RPC = ""
@@ -53,7 +53,7 @@ def start_connection():
 
 def start(text):
     global anime, query
-    response = post("https://graphql.anilist.co", json={
+    response = client.post("https://graphql.anilist.co", json={
         "query": query.format(text)
     })
     anime = response.json()['data']['Media']['title']['english']

@@ -51,6 +51,7 @@ DEFAULT_CONFIG = {
         'animefenix': 'https://animefenix.com/',
         "haho": "https://haho.moe/",
         "hentaistream": "https://hentaistream.moe/",
+        "kamyroll_api": "https://api-kamyroll.herokuapp.com/",
         "tenshi": "https://tenshi.moe/",
         "twist": "https://twist.moe/",
         "zoro": "https://zoro.to/",
@@ -129,6 +130,19 @@ HAHO = SITE_URLS.get('haho')
 HENTAISTREAM = SITE_URLS.get('hentaistream')
 TWIST = SITE_URLS.get('twist')
 ZORO = SITE_URLS.get('zoro')
+ANIMEXIN = SITE_URLS.get("animexin")
+ANIMIXPLAY = SITE_URLS.get("animixplay")
+ANIMTIME = SITE_URLS.get("animtime")
+CRUNCHYROLL = SITE_URLS.get("crunchyroll")
+KAWAIIFU = SITE_URLS.get("kawaiifu")
+KAMYROLL_API = SITE_URLS.get("kamyroll_api")
+GOGOANIME = SITE_URLS.get("gogoanime")
+NYAASI = SITE_URLS.get("nyaasi")
+TENSHI = SITE_URLS.get("tenshi")
+HAHO = SITE_URLS.get("haho")
+HENTAISTREAM = SITE_URLS.get("hentaistream")
+TWIST = SITE_URLS.get("twist")
+ZORO = SITE_URLS.get("zoro")
 
 QUALITY = CONFIG.get("quality_string")
 
